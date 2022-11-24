@@ -1,26 +1,41 @@
 # aecir
 Ansi escape codes in Rust.
 
-## What is it?
-Just some simple Rust aliases for ANSI codes.  
-Here's an excerpt from a style example.
+## Usage
+Add this your `Cargo.toml`
+```toml
+[dependencies]
+aecir = {git='https://github.com/nate-sys/aecir', branch = 'main'}
+```
+
+## Examples
+You can run the examples from this repo. 
+```sh
+git clone https://github.com/nate-sys/aecir
+cd aecir
+cargo run --example <example_name>
+```
+## Philosophy
+Most of these aliases are just Structs and Enums that `impl std::fmt::Display`
+or functions that return their corresponding string values. Almost all of 
+these aliases expect _you_ to do the writing to `stdout` and flushing.  
+  
 ```rust
-use aecir::style::{self, Color, ColorName, Format};
+use aecir::{ buffer, style::{self, Color, ColorName} };
+use std::io::{stdout, Write};
 
 fn main() {
-    println!("{}I am red text.", Color::Fg(ColorName::Red));
-    println!(
-        "{}Now, my background is blue.{}",
-        Color::Bg(ColorName::Blue),
-        style::reset_colors(),    
-    );
-    println!("{}Now, I am just now bold", Format::Bold);
-    println!("{}... and italic", Format::Italic);
-    println!("{}... and also yellow.", Color::Fg(ColorName::Yellow));
-    println!("{}Now I am back to normal.", style::reset_all());
+    let mut stdout = stdout(); 
+
+    write!(
+        stdout, 
+        "{}Hello world{}", 
+        Color::Fg(ColorName::Red), 
+        style::reset_colors(),
+    ).unwrap();
+
+    stdout.flush().unwrap()
 }
 ```
-![2022-11-23-15:18:45-screenshot-cropped](https://user-images.githubusercontent.com/96471299/203545731-cb714f32-7307-4a5a-9b67-3c499e27e008.png)
-
 
 
